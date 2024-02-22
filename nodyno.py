@@ -4,6 +4,9 @@ import os.path, subprocess, glob, time, signal, sys
 
 
 dynomaindir = r"C:\Program Files\DyKnow\Cloud"
+if not os.path.exists(dynomaindir):
+    input("U no have Dyknow! Press enter to exit.")
+    sys.exit()
 dirs = [x for x in os.scandir(dynomaindir) if x.is_dir()]
 dynodir = dirs[0].path
 ignore = ("DyKnowTest.exe","DyKnowLogSender.exe", "Demo64_32.exe","Demo32_64.exe", "dkInteractive.exe", "winProcess.exe", "MonitorStateReader.exe")
