@@ -1,6 +1,6 @@
 import os.path, subprocess, glob, time, signal, sys
 import urllib.request as r
-import urllib.error, hashlib, hmac
+import urllib.error, hashlib, hmac, getpass
 
 def importinstall(pipname,modulename=None,update=False,**importkwargs):
     if modulename is None:
@@ -10,7 +10,7 @@ def importinstall(pipname,modulename=None,update=False,**importkwargs):
             return __import__(modulename)
         except ImportError:
             pass
-    os.system(rf'pip install{" --upgrade" if update else ""} {pipname}', shell=True)
+    subprocess.call(rf'pip install{" --upgrade" if update else ""} {pipname}', shell=True)
     return __import__(modulename)
 
 pyscreeze = importinstall('pyscreeze')
@@ -38,7 +38,7 @@ if not os.path.exists(dynomaindir):
     input("U no have Dyknow! Press enter to exit.")
     sys.exit()
 
-checkupdates=True
+checkupdates = True
 
 data = request("https://raw.githubusercontent.com/magentapenguin/dy-no/master/nodyno.py")
 try:
@@ -78,12 +78,12 @@ def f2():
         time.sleep(4)
         screenshot()
         for x in glob.iglob(dynodir+r"\*.exe"):
-           x = os.path.split(x)[1]
-           if x in ignore:
+            x = os.path.split(x)[1]
+            if x in ignore:
                continue
-           f(x)
-           usednames.append(x)
-           #print(usednames)
+            f(x)
+            usednames.append(x)
+            #print(usednames)/
     
 
 if __name__ == '__main__':
