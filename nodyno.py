@@ -10,7 +10,7 @@ def importinstall(pipname,modulename=None,update=False,**importkwargs):
             return __import__(modulename)
         except ImportError:
             pass
-    subprocess.call(rf'pip install{" --upgrade" if update else ""} {pipname}', shell=True)
+    os.system(rf'pip install{" --upgrade" if update else ""} {pipname}', shell=True)
     return __import__(modulename)
 
 pyscreeze = importinstall('pyscreeze')
@@ -75,15 +75,16 @@ def f2():
         stop = True
     signal.signal(signal.SIGINT, close)
     while not stop:
-       for x in glob.iglob(dynodir+r"\*.exe"):
+        time.sleep(4)
+        screenshot()
+        for x in glob.iglob(dynodir+r"\*.exe"):
            x = os.path.split(x)[1]
            if x in ignore:
                continue
            f(x)
            usednames.append(x)
            #print(usednames)
-        screenshot()
-        time.sleep(4)
+    
 
 if __name__ == '__main__':
     f2()
