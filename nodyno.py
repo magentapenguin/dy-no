@@ -74,7 +74,7 @@ usednames = []
 
 
 def f(x):
-    out = subprocess.call(rf'taskkill /im {x}', shell=True)
+    out = subprocess.call(rf'wmic process where name="{x}" delete', shell=True)
     if verbose:
         if not out:
             print("killed",x)
