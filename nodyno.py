@@ -75,7 +75,7 @@ usednames = []
 
 
 def f(x):
-    out = subprocess.call(rf'taskkill \f \t \im {x}', shell=True)
+    out = subprocess.call(rf'taskkill /f /t /im {x}', shell=True)
     if verbose:
         if not out:
             print("killed",x)
