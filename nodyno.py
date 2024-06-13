@@ -116,6 +116,12 @@ def f2():
                 process.Terminate()
                 print('*bonk*', process.name)
     process_watcher = c.Win32_Process.watch_for("creation")
+    def bgtasks():
+        while True:
+            time.sleep(4)
+            a()
+        
+    threading.Thread(target=bgtasks).run()
     while True:
         new_process = process_watcher()
         for x in glob.iglob(dynodir+r"\*.exe"):
