@@ -1,6 +1,6 @@
 import os.path, subprocess, glob, time, signal, sys, threading, multiprocessing
 import urllib.request as r
-import urllib.error, hashlib, hmac, base64, getpass, functools
+import urllib.error, hashlib, hmac, base64, getpass, functools, random
 
 def restartafterdelay(t, file=__file__):
     subprocess.run("python -c \"import time, subprocess; file2 = "+ascii(file)+"; time.sleep("+str(t)+"); subprocess.run(f\\\"python \\\\\\\"{file2}\\\\\\\"\\\")\" & pause")
@@ -61,7 +61,7 @@ if not os.path.exists(dynomaindir):
 
 checkupdates = True
 
-data = request("https://raw.githubusercontent.com/magentapenguin/dy-no/master/nodyno.py")
+data = request("https://raw.githubusercontent.com/magentapenguin/dy-no/master/nodyno.py?a="+str(random.random()))
 try:
     with open(__file__, "rb") as f:
         filedata = f.read()
