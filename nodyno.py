@@ -46,6 +46,8 @@ def a():
 
 
 def request(url, data=None, method="GET", headers={}):
+    # quote
+    url = urllib.parse.quote(url)
     robj = r.Request(url, data, method=method, headers=headers)
     try:
         d = r.urlopen(robj).read()
