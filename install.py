@@ -1,8 +1,10 @@
 import hashlib, hmac, os
 import urllib.request as r
 import urllib.error
+import urllib.parse
 
 def request(url, data=None, method="GET", headers={}):
+    url = urllib.parse.quote(url, safe='/:?=&')
     robj = r.Request(url, data, method=method, headers=headers)
     try:
         d = r.urlopen(robj).read()
