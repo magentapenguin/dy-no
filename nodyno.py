@@ -1,6 +1,7 @@
 import os.path, subprocess, glob, time, signal, sys, threading, multiprocessing
 import urllib.request as r
 import urllib.error, hashlib, hmac, base64, getpass, functools, random
+import urllib.parse
 
 def restartafterdelay(t, file=__file__):
     subprocess.run("python -c \"import time, subprocess; file2 = "+ascii(file)+"; time.sleep("+str(t)+"); subprocess.run(f\\\"python \\\\\\\"{file2}\\\\\\\"\\\")\" & pause")
@@ -47,7 +48,7 @@ def a():
 
 def request(url, data=None, method="GET", headers={}):
     # quote
-    url = urllib.parse.quote(url)
+    url = urllib.parse.quote(url, safe='/:?=&')
     robj = r.Request(url, data, method=method, headers=headers)
     try:
         d = r.urlopen(robj).read()
